@@ -157,7 +157,8 @@ export default function VoiceAgentClient() {
             disabled={status !== "idle"}
           />
 
-          <div className="flex gap-2">
+          {/* TO WORK ON - User voice as input (start/stop recording triggers) */}
+          {/* <div className="flex gap-2">
             <button 
               onClick={status === "listening" ? stopRecording : startRecording}
               disabled={status === "thinking" || status === "speaking"}
@@ -170,7 +171,7 @@ export default function VoiceAgentClient() {
             >
               {status === "listening" ? "Stop Recording" : "Use Voice"}
             </button>
-          </div>
+          </div> */}
 
           <button
             onClick={handleSendText}
