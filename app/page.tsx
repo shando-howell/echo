@@ -49,7 +49,21 @@ export default function VoiceAgentClient() {
   };
   
   // Voice Recording Logic
+  const toggleRecording = () => {
+    if (status === "listening") {
+      stopRecording();
+    } else {
+      startRecording();
+    }
+  };
+
   const startRecording = async () => {
+    // Guard clause
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      alert("Microphone access blocked. Ensure you are on localhost or HTTPS.");
+      return;
+    }
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const mediaRecorder = new MediaRecorder(stream);
@@ -69,9 +83,11 @@ export default function VoiceAgentClient() {
       };
 
       mediaRecorder.start();
-      setIsRecording(true);
+      setStatus("listening");
     } catch (error) {
       console.error("Microphone access denied:", error);
+      alert("Failed to access microphone. Check browser permissions.");
+      setStatus("idle");
     }
   };
 
@@ -157,10 +173,9 @@ export default function VoiceAgentClient() {
             disabled={status !== "idle"}
           />
 
-          {/* TO WORK ON - User voice as input (start/stop recording triggers) */}
-          {/* <div className="flex gap-2">
+          <div className="flex gap-2">
             <button 
-              onClick={status === "listening" ? stopRecording : startRecording}
+              onClick={toggleRecording}
               disabled={status === "thinking" || status === "speaking"}
               className={`flex-1 py-3 px-4 rounded-xl font-sembold transition-all duration-200 flex
               items-center justify-center gap-2 ${
@@ -171,7 +186,7 @@ export default function VoiceAgentClient() {
             >
               {status === "listening" ? "Stop Recording" : "Use Voice"}
             </button>
-          </div> */}
+          </div>
 
           <button
             onClick={handleSendText}
